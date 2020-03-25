@@ -4,6 +4,7 @@ Module for Terraform Cloud API Endpoint: Workspaces.
 
 import json
 import requests
+from urllib import parse
 
 from .endpoint import TFCEndpoint
 
@@ -88,15 +89,15 @@ class TFCWorkspaces(TFCEndpoint):
         """
         url = f"{self._org_base_url}"
 
-        filters = []
+        filters = {}
         if page_number is not None:
-            filters.append(f"page[number]={page_number}")
+            filters["page[number]"] = page_number
 
         if page_size is not None:
-            filters.append(f"page[size]={page_size}")
+            filters["page[size]"] = page_size
 
         if filters:
-            url += "&".join(filters)
+            url += "?" + parse.urlencode(filters)
         return self._ls(url)
 
     def show(self, workspace_name=None, workspace_id=None):
